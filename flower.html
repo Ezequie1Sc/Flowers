@@ -7,16 +7,201 @@
     <link rel="stylesheet" href="css/main.css" />
     <link rel="icon" href="img/flowers.png" type="image/x-icon" />
     <title>Flower</title>
+    <style>
+      /* Estilos para el reproductor de música */
+      .music-player {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 400px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 15px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        transition: all 0.3s ease;
+      }
+      
+      .music-player:hover {
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+      
+      .player-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      
+      .song-info {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        overflow: hidden;
+      }
+      
+      .album-art {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+        margin-right: 12px;
+        flex-shrink: 0;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+      }
+      
+      .song-details {
+        overflow: hidden;
+      }
+      
+      .song-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: white;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      
+      .song-artist {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      
+      .controls {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+      
+      .control-btn {
+        background: transparent;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+      }
+      
+      .play-pause {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: white;
+        color: #222;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .control-btn:hover {
+        transform: scale(1.1);
+        color: #1DB954; /* Verde tipo Spotify */
+      }
+      
+      .play-pause:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(29, 185, 84, 0.5);
+      }
+      
+      .progress-container {
+        width: 100%;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      
+      .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: #1DB954; /* Verde tipo Spotify */
+        border-radius: 2px;
+        transition: width 0.1s ease;
+      }
+      
+      .time-info {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 5px;
+      }
+      
+      .time {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      
+      .volume-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      
+      .volume-slider {
+        width: 80px;
+        -webkit-appearance: none;
+        height: 4px;
+        border-radius: 2px;
+        background: rgba(255, 255, 255, 0.3);
+        outline: none;
+      }
+      
+      .volume-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: white;
+        cursor: pointer;
+      }
+      
+      /* Responsive */
+      @media (max-width: 480px) {
+        .music-player {
+          width: 95%;
+          padding: 12px;
+        }
+        
+        .album-art {
+          width: 40px;
+          height: 40px;
+        }
+        
+        .controls {
+          gap: 10px;
+        }
+      }
+    </style>
   </head>
   <body class="container">
-    <audio src="sound/ChristianBasso&HaienQiu-Flowers.mp3" autoplay></audio>
+    <audio id="audio-player" src="sound/ChristianBasso&HaienQiu-Flowers.mp3"></audio>
     <div id="lyrics">
      
     </div>
-    <h1 class="titulo">Estas flores amarillas son un reflejo de la alegría que traes a mi vida. <br> <br>
-      Gracias por iluminar mis días con tu presencia.</h1>
-  
+   
     <div class="night"></div>
+    <div class="flowers">
+      <div class="night"></div>
     <div class="flowers">
       <div class="flower flower--1">
         <div class="flower__leafs flower__leafs--1">
@@ -326,7 +511,125 @@
         </div>
       </div>
     </div>
+    </div>
+    
+    <!-- Reproductor de música estilo Spotify -->
+    <div class="music-player">
+      <div class="player-controls">
+        <div class="song-info">
+          <div class="album-art">🎵</div>
+          <div class="song-details">
+            <div class="song-title">Flowers</div>
+            <div class="song-artist">Christian Basso & Haien Qiu</div>
+          </div>
+        </div>
+        <div class="controls">
+          <button class="control-btn prev-btn">⏮</button>
+          <button class="control-btn play-pause play-btn">▶</button>
+          <button class="control-btn next-btn">⏭</button>
+        </div>
+      </div>
+      <div class="progress-container" id="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="time-info">
+        <span class="time" id="current-time">0:00</span>
+        <span class="time" id="total-time">0:00</span>
+      </div>
+      <div class="volume-container">
+        <span class="control-btn volume-btn">🔊</span>
+        <input type="range" class="volume-slider" id="volume-slider" min="0" max="1" step="0.01" value="1">
+      </div>
+    </div>
+    
     <script src="anim.js"></script>
     <script src="main.js"></script>
+    <script>
+      // Script para el reproductor de música
+      document.addEventListener('DOMContentLoaded', function() {
+        const audio = document.getElementById('audio-player');
+        const playBtn = document.querySelector('.play-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const progressContainer = document.getElementById('progress-container');
+        const currentTimeEl = document.getElementById('current-time');
+        const totalTimeEl = document.getElementById('total-time');
+        const volumeSlider = document.getElementById('volume-slider');
+        const volumeBtn = document.querySelector('.volume-btn');
+        
+        // Reproducir/pausar
+        playBtn.addEventListener('click', function() {
+          if (audio.paused) {
+            audio.play();
+            playBtn.innerHTML = '⏸';
+          } else {
+            audio.pause();
+            playBtn.innerHTML = '▶';
+          }
+        });
+        
+        // Actualizar barra de progreso
+        audio.addEventListener('timeupdate', function() {
+          const currentTime = audio.currentTime;
+          const duration = audio.duration;
+          const progressPercent = (currentTime / duration) * 100;
+          
+          progressBar.style.width = `${progressPercent}%`;
+          
+          // Actualizar tiempos
+          currentTimeEl.textContent = formatTime(currentTime);
+          if (!isNaN(duration)) {
+            totalTimeEl.textContent = formatTime(duration);
+          }
+        });
+        
+        // Click en la barra de progreso para saltar
+        progressContainer.addEventListener('click', function(e) {
+          const width = this.clientWidth;
+          const clickX = e.offsetX;
+          const duration = audio.duration;
+          
+          audio.currentTime = (clickX / width) * duration;
+        });
+        
+        // Control de volumen
+        volumeSlider.addEventListener('input', function() {
+          audio.volume = this.value;
+          
+          // Cambiar icono según el volumen
+          if (this.value == 0) {
+            volumeBtn.textContent = '🔇';
+          } else if (this.value < 0.5) {
+            volumeBtn.textContent = '🔈';
+          } else {
+            volumeBtn.textContent = '🔊';
+          }
+        });
+        
+        // Botón de silenciar
+        volumeBtn.addEventListener('click', function() {
+          if (audio.volume > 0) {
+            audio.volume = 0;
+            volumeSlider.value = 0;
+            this.textContent = '🔇';
+          } else {
+            audio.volume = 1;
+            volumeSlider.value = 1;
+            this.textContent = '🔊';
+          }
+        });
+        
+        // Formatear tiempo en minutos:segundos
+        function formatTime(seconds) {
+          const min = Math.floor(seconds / 60);
+          const sec = Math.floor(seconds % 60);
+          return `${min}:${sec < 10 ? '0' + sec : sec}`;
+        }
+        
+        // Actualizar tiempo total cuando el audio esté cargado
+        audio.addEventListener('loadedmetadata', function() {
+          totalTimeEl.textContent = formatTime(audio.duration);
+        });
+      });
+    </script>
   </body>
 </html>
